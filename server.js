@@ -1,24 +1,39 @@
 const express = require('express');
+const cors = require('cors'); // ✨ 요거 추가
 const axios = require('axios');
-const cors = require('cors');
-const app = express();
 require('dotenv').config();
 
-app.use(cors());
+const app = express();
+const port = process.env.PORT || 10000;
 
-app.get('/api/building', async (req, res) => {
-  const { sigunguCd, bjdongCd, bun, ji } = req.query;
-  const serviceKey = process.env.SERVICE_KEY;
+app.use(cors()); // ✨ 모든 요청에 대해 CORS 허용
 
-  const url = `https://apis.data.go.kr/1611000/BldRgstService_v2/getBrFlrOulnInfo?serviceKey=${serviceKey}&sigunguCd=${sigunguCd}&bjdongCd=${bjdongCd}&bun=${bun}&ji=${ji}&numOfRows=100&type=json`;
-
+// 기존 API 경로
+app.get('/api/land', async (req, res) => {
   try {
-    const response = await axios.get(url);
+    const { sigunguCd, bjdongCd, bun, ji } = req.query;
+
+    const url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrBasisOulnInfo';
+    const response = await axios.get(url, {
+      params: {
+        serviceKey: process.env.SERVICE_KEY,
+        numOfRows: 10,
+        pageNo: 1,
+        sigunguCd,
+        bjdongCd,
+        bun,
+        ji,
+        resultType: 'json'
+      }
+    });
+
     res.json(response.data);
-  } catch (err) {
-    res.status(500).json({ error: '데이터 요청 실패', details: err.message });
+  } catch (error) {
+    console.error('API 호출 실패:', error.message);
+    res.status(500).json({ error: 'API 호출 실패' });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
