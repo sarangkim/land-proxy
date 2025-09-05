@@ -38,4 +38,16 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-console.log('Service Key:', process.env.SERVICE_KEY);
+// 1. 콘솔로 서비스 키 출력
+console.log("Service Key:", serviceKey);
+
+// 2. CORS 확실히 적용
+const cors = require("cors");
+app.use(cors());
+
+// 3. 오류 출력 자세히
+.catch(error => {
+  console.error("API 호출 중 오류:", error.response?.data || error.message);
+  res.status(500).json({ error: "API 호출 실패", detail: error.message });
+});
+
