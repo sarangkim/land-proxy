@@ -41,9 +41,6 @@ app.listen(port, () => {
 // 1. 콘솔로 서비스 키 출력
 console.log("Service Key:", serviceKey);
 
-// 2. CORS 확실히 적용
-const cors = require("cors");
-app.use(cors());
 
 // 3. 오류 출력 자세히
 .catch(error => {
