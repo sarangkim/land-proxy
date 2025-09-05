@@ -37,3 +37,5 @@ app.get('/api/land', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+console.log('Service Key:', process.env.SERVICE_KEY);
